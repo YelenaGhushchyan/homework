@@ -1,25 +1,20 @@
-﻿namespace ConsoleApp9;
-// Task 9: Finding the Longest Word in a Sentence
-// Task: Ask the user for a sentence and use a loop to determine the longest word.
-
+﻿namespace ConsoleApp7;
+//Task 7: Number Pyramid
+// Task: Print a number pyramid using nested loops, like:
 class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Write sentence ");
-        string? sentence = Console.ReadLine();
-        string[] arr = sentence.Split(" ");
-        int maxCount = 0;
-        string maxWord = "";
-        for (int i = 0; i < arr.Length; i++)
+        Console.WriteLine("enter n");
+        int n = int.Parse(Console.ReadLine());
+        for (int i = 1; i <= n; i++)
         {
-            if (arr[i].Length > maxCount)
+            for (int j = 1; j <= i; j++)
             {
-                maxCount = arr[i].Length;
-                maxWord = arr[i];
+                Console.Write($"{i} ");
             }
+                Console.WriteLine();
         }
-        Console.WriteLine("{0} {1}",maxWord,maxCount);
         
     }
 }
