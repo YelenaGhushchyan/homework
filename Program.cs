@@ -1,20 +1,29 @@
-﻿namespace ConsoleApp7;
-//Task 7: Number Pyramid
-// Task: Print a number pyramid using nested loops, like:
+﻿namespace ConsoleApp6;
+//Task 6: Collatz Conjecture
+// Task: Given a number N, apply the following rule until N becomes 1:
+// If N is even → N = N / 2
+// If N is odd → N = 3 * N + 1
+// Count how many steps it takes to reach 1.
+
 class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("enter n");
         int n = int.Parse(Console.ReadLine());
-        for (int i = 1; i <= n; i++)
+        int count = 0;
+        while (n != 1)
         {
-            for (int j = 1; j <= i; j++)
+            if (n % 2 == 0)
             {
-                Console.Write($"{i} ");
+                n /= 2;
             }
-                Console.WriteLine();
+            else
+            {
+                n = 3 * n + 1;
+            }
+
+            count++;
         }
-        
+        Console.WriteLine(count);
     }
 }
