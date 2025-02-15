@@ -1,29 +1,25 @@
-﻿namespace ConsoleApp6;
-//Task 6: Collatz Conjecture
-// Task: Given a number N, apply the following rule until N becomes 1:
-// If N is even → N = N / 2
-// If N is odd → N = 3 * N + 1
-// Count how many steps it takes to reach 1.
+﻿namespace ConsoleApp9;
+// Task 9: Finding the Longest Word in a Sentence
+// Task: Ask the user for a sentence and use a loop to determine the longest word.
 
 class Program
 {
     static void Main(string[] args)
     {
-        int n = int.Parse(Console.ReadLine());
-        int count = 0;
-        while (n != 1)
+        Console.WriteLine("Write sentence ");
+        string? sentence = Console.ReadLine();
+        string[] arr = sentence.Split(" ");
+        int maxCount = 0;
+        string maxWord = "";
+        for (int i = 0; i < arr.Length; i++)
         {
-            if (n % 2 == 0)
+            if (arr[i].Length > maxCount)
             {
-                n /= 2;
+                maxCount = arr[i].Length;
+                maxWord = arr[i];
             }
-            else
-            {
-                n = 3 * n + 1;
-            }
-
-            count++;
         }
-        Console.WriteLine(count);
+        Console.WriteLine("{0} {1}",maxWord,maxCount);
+        
     }
 }
