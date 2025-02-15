@@ -1,27 +1,19 @@
-﻿using System;
-//Task 1: Fibonacci Sequence Generator
-// Task: Write a program that generates the first N numbers of the Fibonacci sequence using a loop.
+﻿namespace ConsoleApp2;
+//Task 2: Reverse a Number
+// Task: Given an integer, reverse its digits using a loop (e.g., 12345 → 54321).
 
 class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("enter your number");
-        int n = int.Parse(Console.ReadLine());
-        int first = 0;
-        int second = 1;
-        if (n > 1)
+        Console.Write("enter your number ");
+        int number = int.Parse(Console.ReadLine());
+        int reversed = 0;
+        while (number > 0)
         {
-            Console.Write(second);
+            reversed = reversed * 10 + number % 10;
+            number /= 10;
         }
-
-        for (int i = 2; i <= n; i++)
-        {
-            int next = first + second;
-            Console.Write(next);
-            first = second;
-            second = next;
-        }
-        Console.WriteLine();
+        Console.WriteLine(reversed);
     }
 }
