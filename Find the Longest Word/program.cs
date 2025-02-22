@@ -3,13 +3,10 @@ class Program
     static string LongestWord(params string[] str)
     {
         string longestWord = str[0];
-        int maxLength = str[0].Length;
-        for (int i = 1; i < str.Length; i++)
+        foreach(string word in str)
         {
-            if (maxLength < str[i].Length)
-            {
-                maxLength = str[i].Length;
-                longestWord = str[i];
+            if(word.Length >  longestWord.Length){
+                longestWord = word;
             }
         }
         return longestWord;
