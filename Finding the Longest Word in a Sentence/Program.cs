@@ -1,25 +1,21 @@
-namespace ConsoleApp9;
-// Task 9: Finding the Longest Word in a Sentence
-// Task: Ask the user for a sentence and use a loop to determine the longest word.
-
 class Program
 {
-    static void Main(string[] args)
+    static string LongestWord(params string[] str)
     {
-        Console.WriteLine("Write sentence ");
-        string? sentence = Console.ReadLine();
-        string[] arr = sentence.Split(" ");
-        int maxCount = 0;
-        string maxWord = "";
-        for (int i = 0; i < arr.Length; i++)
+        string longestWord = str[0];
+        foreach(string word in str)
         {
-            if (arr[i].Length > maxCount)
-            {
-                maxCount = arr[i].Length;
-                maxWord = arr[i];
+            if(word.Length >  longestWord.Length){
+                longestWord = word;
             }
         }
-        Console.WriteLine("{0} {1}",maxWord,maxCount);
-        
+        return longestWord;
+    }
+    static void Main(string[] args)
+    {
+        string sentance  = Console.ReadLine();
+        string[] array = sentance.Split(' ');
+        string longestWord = LongestWord(array);
+        Console.WriteLine($"Longest word is {longestWord}");
     }
 }
