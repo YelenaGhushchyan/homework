@@ -31,7 +31,7 @@ class Program
 {
     public static void Main()
     {
-        string[] subjects = { "Math", "Science", "English" };
+        string[] subjects = { "Math", "Science", "English", "History" };
         int[] grades = { 85, 90, 78 };
 
         Student student = new Student(subjects, grades);
@@ -39,5 +39,6 @@ class Program
         Console.WriteLine(student["Math"]);
         Console.WriteLine(student["Science"]);
         Console.WriteLine(student["History"]);
+         Console.WriteLine(student["English"]);
     }
 }
