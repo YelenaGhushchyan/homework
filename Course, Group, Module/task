@@ -1,0 +1,202 @@
+using System.Reflection;
+
+class Course
+{
+    public string Name { get; set; }
+    public  int MonthlyPrice { get; set; }
+    private Module[] _modules;
+    public Module this[int index]
+    {
+        get
+        {
+            if (index < 0 || index >= _modules.Length)
+            {
+                throw new IndexOutOfRangeException("index is out of range");
+            }
+
+            return _modules[index];
+        }
+    }
+    public Course(string name, int monthlyPrice, Module[] modules)
+    {
+        Name = name;
+        MonthlyPrice = monthlyPrice;
+        _modules = modules;
+    }
+}
+
+class Module
+{
+    public string _title { get; protected set; }
+     public int _time { get; protected set; }
+
+     public Module(string title, int time)
+    {
+        _title = title;
+        _time = time;
+    }
+}
+
+class Group
+{
+    public string Name { get; set; }
+    public int StudentsCount { get; set; }
+    public Course CCourse { get; set; }
+
+    
+
+    public Group(string name, int studentsCount, Course course)
+    {
+        Name = name;
+        StudentsCount = studentsCount;
+        CCourse = course;
+    }
+}
+
+class Web : Course
+{
+    private string _type;
+
+    public string Type
+    {
+        get
+        {
+            return _type;
+        }
+        set
+        {
+            if (value != "frontend" && value != "backend" && value != "fullstack")
+            {
+                throw new Exception("must contain frontend,backend,fullstack");
+            }
+
+            _type = value; ;
+        }
+    }
+    public Web(string name, int monthlyPrice, string _type, Module[] modules) 
+        : base(name, monthlyPrice, modules)
+    {
+        this._type = _type;
+    }
+}
+
+class Game : Course
+{
+    private string _engine;
+    public string Engine
+    {
+        get
+        {
+            return _engine;
+        }
+        set
+        {
+            if (value != "unity" && value != "unreal")
+            {
+                throw new Exception("must be unity or unreal");
+            }
+
+            _engine = value;
+        }
+    }
+
+    public Game(string name, int monthlyPrice, string engine, Module[] modules)
+        : base(name, monthlyPrice, modules)
+    {
+        Engine = engine;
+    }
+}
+
+class AI : Course
+{
+    public AI(string name, int monthlyPrice, Module[] modules)
+        : base(name, monthlyPrice, modules){}
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        Course[] courses = new Course[]
+        {
+            new Web("Frontend Development", 500000, "frontend", new Module[]
+            {
+                new Module("HTML & CSS", 2), new Module("JavaScript", 3)
+            }),
+            new Web("Fullstack Development", 60000, "fullstack", new Module[]
+            {
+                new Module("Node.js", 4), new Module("React", 5)
+            }),
+            new AI("Machine Learning", 80000, new Module[]
+            {
+                new Module("Python for AI", 6), new Module("Deep Learning", 8)
+            }),
+            new Game("Game Development", 72000, "unity", new Module[]
+            {
+                new Module("C# for Unity", 5), new Module("Physics in Games", 4)
+            }),
+            new Game("Game Dev Advanced", 42000, "unreal", new Module[]
+            {
+                new Module("Blueprints", 6), new Module("C++ for Unreal", 7)
+            })
+        };
+
+        Group[] groups = new Group[]
+        {
+            new Group("Frontend Group 1", 15, courses[0]),
+            new Group("Fullstack Group 1", 12, courses[1]),
+            new Group("AI Group 1", 10, courses[2]),
+            new Group("Game Dev Group 1", 20, courses[3]),
+            new Group("Game Dev Group 2", 18, courses[4])
+        };
+        int CountOfWebStudents =MyProgram.CountOfWeb(groups);
+        Console.WriteLine($"the count of web students is {CountOfWebStudents}");
+        int Price = PriceOfGame(groups);
+        Console.WriteLine($"the amount is {Price}");
+        string CourseMax = MaxStudentsGroup(groups);
+        Console.WriteLine($"the famous course  is {CourseMax}");
+    }
+
+    public static int CountOfWeb(Group[] groups)
+    {
+        int count = 0;
+        foreach (var item in groups)
+        {
+            if (item.CCourse is Web )
+            {
+                count += item.StudentsCount;
+            }
+        }
+        return count;
+    }
+
+    public static int PriceOfGame(Group[] groups)
+    {
+        int price = 0;
+        foreach (var item in groups)
+        {
+            if (item.CCourse is Game other && other.Engine == "unreal")
+            {
+                price += other.MonthlyPrice * item.StudentsCount;
+            }
+        }
+
+        return price;
+    }
+
+    public static string MaxStudentsGroup(Group[] groups)
+    {
+        int Maxcount = 0;
+        string GroupName = "";
+        foreach (var item in groups)
+        {
+            if (item.StudentsCount > Maxcount)
+            {
+                Maxcount = item.StudentsCount;
+                GroupName = item.Name;
+            }
+        }
+
+        return GroupName;
+    }
+}
