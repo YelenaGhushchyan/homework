@@ -1,0 +1,131 @@
+public struct Translation
+{
+    public string Original { get;  }
+    public string Translated { get;  }
+
+    public Translation(string original, string translated)
+    {
+        Original = original;
+        Translated = translated;
+    }
+}
+
+abstract class Translator
+{ 
+    public abstract string translate(string word);
+}
+
+class Russian : Translator
+{
+    
+          Translation[] _translations = 
+        {
+            new Translation("Apple", "Яблоко"),
+            new Translation("Banana", "Банан"),
+            new Translation("Orange", "Апельсин"),
+            new Translation("Mango", "Манго"),
+            new Translation("Pineapple", "Ананас"),
+            new Translation("Grape", "Виноград"),
+            new Translation("Strawberry", "Клубника"),
+            new Translation("Cherry", "Вишня"),
+            new Translation("Watermelon", "Арбуз"),
+            new Translation("Peach", "Персик")
+        };
+
+    public override string translate(string word)
+    {
+        word = word.ToLower(); 
+        for (int i = 0; i < _translations.Length; i++)
+        {
+            if (_translations[i].Original.ToLower() == word) 
+            {
+                return _translations[i].Translated;
+            }
+        }
+
+        return "invalid word";
+    }
+}
+
+class Spanish : Translator
+{
+   
+        Translation [] _translations = 
+        {
+            new Translation("Apple", "Manzana"),
+            new Translation("Banana", "Plátano"),
+            new Translation("Orange", "Naranja"),
+            new Translation("Mango", "Mango"),
+            new Translation("Pineapple", "Piña"),
+            new Translation("Grape", "Uva"),
+            new Translation("Strawberry", "Fresa"),
+            new Translation("Cherry", "Cereza"),
+            new Translation("Watermelon", "Sandía"),
+            new Translation("Peach", "Durazno")
+        };
+    
+
+    public override string translate(string word)
+    {
+        word = word.ToLower(); 
+        for (int i = 0; i < _translations.Length; i++)
+        {
+            if (_translations[i].Original.ToLower() == word) 
+            {
+                return _translations[i].Translated;
+            }
+        }
+
+        return "invalid word";
+    }
+}
+
+class French : Translator
+{
+    
+       Translation[] _translations = new Translation[]
+        {
+            new Translation("Apple", "Pomme"),
+            new Translation("Banana", "Banane"),
+            new Translation("Orange", "Orange"),
+            new Translation("Mango", "Mangue"),
+            new Translation("Pineapple", "Ananas"),
+            new Translation("Grape", "Raisin"),
+            new Translation("Strawberry", "Fraise"),
+            new Translation("Cherry", "Cerise"),
+            new Translation("Watermelon", "Pastèque"),
+            new Translation("Peach", "Pêche")
+        };
+    
+
+    public override string translate(string word)
+    {
+        word = word.ToLower(); 
+        for (int i = 0; i < _translations.Length; i++)
+        {
+            if (_translations[i].Original.ToLower() == word) 
+            {
+                return _translations[i].Translated;
+            }
+        }
+
+        return "invalid word";
+    }
+}
+
+class Program
+{
+    public static void Main()
+    {
+        Translator[] words = new Translator[3];
+        words[0] = new Spanish();
+        words[1] = new French();
+        words[2] = new Russian();
+        
+        foreach (Translator t in words)
+        {
+            Console.WriteLine(t.translate("apple")); 
+            Console.WriteLine(t.translate("banana"));
+        }
+    }
+}
