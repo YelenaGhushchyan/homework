@@ -1,0 +1,122 @@
+abstract class Shape
+{
+    public abstract double Surface();
+    public abstract void Draw();
+
+    public void Print()
+    {
+        Console.WriteLine(this.GetType().Name);
+        Console.WriteLine($"surface: {Surface()}");
+        Draw();
+    }
+}
+
+class Square : Shape
+{
+    private double x;
+
+    public Square(double X)
+    {
+        x = X;
+    }
+    public override double Surface()
+    {
+        if (x < 0)
+        {
+            throw new Exception("can't be negative");
+        }
+
+        return x * x;
+    }
+
+    /*
+    public override void Draw()
+    {
+        for (int i = 0; i < x; i++)
+        {
+            for (int j = 0; j < x; j++)
+            {
+                Console.Write("+ ");
+            }
+            Console.WriteLine();
+        }
+    }
+    */
+    public override void Draw()
+    {
+        for (int i = 0; i < x; i++)
+        {
+            for (int j = 0; j < x; j++)
+            {
+                if (i == 0 || i == x - 1 || j == 0 || j == x - 1)
+                    Console.Write("+ ");
+                else
+                    Console.Write("  ");
+            }
+            Console.WriteLine();
+        }
+    }
+}
+
+class Rectangle : Shape
+{
+    private double _length;
+    private double _width;
+
+    public Rectangle(double length, double width)
+    {
+        _length = length;
+        _width = width;
+    }
+    public override double Surface()
+    {
+        if (_length < 0 && _width < 0 )
+        {
+            throw new Exception("can't be negative");
+        }
+
+        return _length * _width;
+    }
+    /*
+    public override void Draw()
+    {
+        for (int i = 0; i < _length; i++)
+        {
+            for (int j = 0; j < _width; j++)
+            {
+                Console.Write("+ ");
+            }
+            Console.WriteLine();
+        }
+    }
+    */
+    public override void Draw()
+    {
+        for (int i = 0; i < _length; i++)
+        {
+            for (int j = 0; j < _width; j++)
+            {
+                if (i == 0 || i == _length - 1 || j == 0 || j == _width - 1)
+                    Console.Write("+ ");
+                else
+                    Console.Write("  "); 
+            }
+            Console.WriteLine();
+        }
+    }
+    
+}
+
+class Program
+{
+    public static void Main()
+    {
+        Shape[] shapes = new Shape[2];
+        shapes[0] = new Square(4);
+        shapes[1] = new Rectangle(4, 6);
+        foreach (Shape s in shapes)
+        {
+            s.Print();
+        }
+    }
+}
