@@ -1,0 +1,86 @@
+class MyStack<T>
+{
+    public int Capacity { get;}
+    private T[] _stack;
+    public int Count { get; private set; }
+    public MyStack(int capacity)
+    {
+        if (capacity <= 0)
+        {
+            throw new ArgumentException("Capacity must be greater than 0.");
+        }
+
+        Capacity = capacity;
+        _stack = new T[capacity];
+        Count = 0;
+    }
+    public T this[int index]
+    {
+        get
+        {
+            if (index < 0 || index >= Count)
+            {
+                throw new IndexOutOfRangeException("out of range");
+            }
+
+            return _stack[index];
+        }
+    }
+
+    public void MyPush(T obj)
+    {
+        if (Count >= Capacity)
+        {
+            throw new IndexOutOfRangeException("out of range");
+        }
+        _stack[Count++] = obj;
+    }
+
+    public T MyPop()
+    {
+        if (Count == 0)
+        {
+            throw new InvalidOperationException("Stack underflow: Cannot pop from an empty stack.");
+        }
+       return _stack[--Count];
+    }
+
+    public T MyPeek()
+    {
+        if (Count == 0)
+        {
+            throw new InvalidOperationException("Stack underflow: Cannot pop from an empty stack.");
+        }
+        return _stack[Count - 1];
+    }
+
+    public void MyClear()
+    {
+        Count = 0;
+    }
+    
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        MyStack<int> stack = new MyStack<int>(5);
+        stack.MyPush(10);
+        stack.MyPush(20);
+        stack.MyPush(30);
+        stack.MyPush(40);
+        stack.MyPush(50);
+
+        Console.WriteLine("Top element (peek): " + stack.MyPeek()); 
+        Console.WriteLine("Count: " + stack.Count);
+        
+        int popped = stack.MyPop();
+        Console.WriteLine("Popped element: " + popped); 
+        Console.WriteLine("New top element: " + stack.MyPeek()); 
+        Console.WriteLine("Count after pop: " + stack.Count);
+        
+        Console.WriteLine("Element at index 0: " + stack[0]); 
+        Console.WriteLine("Element at index 1: " + stack[1]);
+    }
+}
