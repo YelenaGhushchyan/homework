@@ -1,0 +1,174 @@
+public class MyList<T> where T : IComparable<T>
+{
+    private T[] _items;
+    private int _count;
+
+    public int Count { get; private set; }
+
+    public int Capacity { get; private set; }
+
+    public MyList(int capacity )
+    {
+        _items = new T[capacity];
+        Count = 0;
+        Capacity = capacity;
+    }
+
+    public void Add(T item)
+    {
+        if (Count == Capacity )
+        {
+            T[] newList = new T[Capacity];
+            for (int i = 0; i < Count; i++)
+            {
+                newList[i] = _items[i];
+            }
+
+            _items = newList;
+        }
+
+        _items[_count++] = item;
+    }
+    public int BinarySearch(T item)
+    {
+        int start = 0;
+        int end = _count - 1;
+
+        while (start <= end)
+        {
+            int mid = start + (end - start) / 2;
+            int comparison = _items[mid].CompareTo(item);
+
+            if (comparison == 0)
+            {
+                return mid; 
+            }
+            else if (comparison < 0)
+            {
+                start = mid + 1; 
+            }
+            else
+            {
+                end = mid - 1; 
+            }
+        }
+
+        return -1; 
+    }
+    public bool Remove(T item)
+    {
+        for (int i = 0; i < _count; i++)
+        {
+            if (_items[i].Equals(item))
+            {
+                RemoveAt(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void RemoveAt(int index)
+    {
+        if (index < 0 || index >= _count)
+            throw new ArgumentOutOfRangeException();
+
+        for (int i = index; i < _count - 1; i++)
+        {
+            _items[i] = _items[i + 1];
+        }
+
+        _items[--_count] = default;
+    }
+    public bool Contains(T item)
+    {
+        for (int i = 0; i < _count; i++)
+        {
+            if (_items[i].Equals(item))
+                return true;
+        }
+        return false;
+    }
+
+    public int IndexOf(T item)
+    {
+        for (int i = 0; i < _count; i++)
+        {
+            if (_items[i].Equals(item))
+                return i;
+        }
+        return -1; 
+    }
+    
+    public void Clear()
+    {
+        _count = 0; 
+    }
+    
+    public void Print()
+    {
+        for (int i = 0; i < _count; i++)
+        {
+            Console.WriteLine(_items[i]);
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        MyList<int> list = new MyList<int>(5);
+        
+        list.Add(1);
+        list.Add(3);
+        list.Add(5);
+        list.Add(7);
+        list.Add(9);
+
+        Console.WriteLine("List items:");
+        list.Print();
+
+        int index = list.BinarySearch(5);
+        if (index != -1)
+        {
+            Console.WriteLine($"\nElement 5 found at index {index}.");
+        }
+        else
+        {
+            Console.WriteLine("\nElement 5 not found.");
+        }
+
+        index = list.BinarySearch(4);
+        if (index != -1)
+        {
+            Console.WriteLine($"\nElement 4 found at index {index}.");
+        }
+        else
+        {
+            Console.WriteLine("\nElement 4 not found.");
+        }
+
+        list.Add(11);
+        Console.WriteLine("\nAfter adding 11:");
+        list.Print();
+
+        bool removed = list.Remove(3);
+        Console.WriteLine($"\nElement 3 removed: {removed}");
+        list.Print();
+
+        bool contains = list.Contains(5);
+        Console.WriteLine($"\nContains 5: {contains}");
+
+        int indexOfElement = list.IndexOf(7);
+        Console.WriteLine($"\nIndex of element 7: {indexOfElement}");
+
+        list.RemoveAt(2);
+        Console.WriteLine("\nAfter removing element at index 2:");
+        list.Print();
+
+        list.Clear();
+        Console.WriteLine("\nAfter clearing the list:");
+        list.Print();
+    }
+}
