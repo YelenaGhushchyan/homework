@@ -1,0 +1,119 @@
+public class MyDictionary<Tkey, Tvalue>
+{
+   
+    private class MyPair
+    {
+        public Tkey Key;
+        public Tvalue Value;
+    }
+
+    private MyPair[] _items;
+    public int Capacity { get; private set; }
+    public int Count { get; private set; }
+
+    public MyDictionary(int capacity)
+    {
+        Capacity = capacity;
+        Count = 0;
+        _items = new MyPair[capacity];
+    }
+
+    public Tvalue this[Tkey key]
+    {
+        get
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (_items[i].Key.Equals(key))
+                {
+                    return _items[i].Value;
+                }
+            }
+            throw new KeyNotFoundException("Key not found."); 
+        }
+    }
+
+    public void Add(Tkey key, Tvalue value)
+    {
+        for (int i = 0; i < Count; i++)
+        {
+            if (_items[i].Key.Equals(key))
+            {
+                throw new Exception("there is already that key");
+            }
+        }
+        if (Count >= Capacity)
+        {
+            throw new Exception("there is no enough place");
+        }
+       
+            // _items[Count].Key = key;
+            // _items[Count].Value = value;
+            // Count++;
+            _items[Count] = new MyPair { Key = key, Value = value };
+            Count++;
+    }
+
+    public bool TryAdd(Tkey key, Tvalue value)
+    {
+        for (int i = 0; i < Count; i++)
+        {
+            if (_items[i].Key.Equals(key))
+            {
+                return false;
+            }
+        }
+
+        _items[Count] = new MyPair { Key = key, Value = value };
+        Count++;
+        return true;
+    }
+    public bool Remove(Tkey key)
+    {
+        for (int i = 0; i < Count; i++)
+        {
+            if (_items[i].Key.Equals(key))
+            {
+                for (int j = i; j < Count - 1; j++)
+                {
+                    _items[j] = _items[j + 1];
+                }
+                _items[Count - 1] = null;
+
+                Count--;
+                return true;
+            }
+        }
+        return false; 
+    } 
+    public void Print()
+    {
+        for (int i = 0; i < Count; i++)
+        {
+            Console.WriteLine($"Key: {_items[i].Key}, Value: {_items[i].Value}");
+        }
+    }
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        MyDictionary<string, int> dictionary = new MyDictionary<string, int>(5);
+        dictionary.Add("Yelena",21);
+        dictionary.Add("Ani",25);
+        dictionary.Add("Anna",31);
+        dictionary.Add("Mari",11);
+        Console.WriteLine(dictionary.TryAdd("Yelena",22));
+        Console.WriteLine(dictionary.TryAdd("Mane",22));
+        dictionary.Print();
+        Console.WriteLine($"Value for 'Yelena': {dictionary["Yelena"]}"); 
+        Console.WriteLine($"Value for 'Mari': {dictionary["Mari"]}");  
+        Console.WriteLine(dictionary.Remove("Yelena"));
+        dictionary.Print();
+
+        
+        
+    }
+}
+    
