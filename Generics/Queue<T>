@@ -1,0 +1,79 @@
+class MyQueue<T>
+{
+    public int Capacity { get; private set; }
+    public int Count { get; private set; }
+    private T[] _queue;
+    
+    public MyQueue(int capacity)
+    {
+        Capacity = capacity;
+        _queue = new T[Capacity];
+        Count = 0;
+    }
+
+    public T this[int index]
+    {
+        get
+        {
+            if (index < 0 || index >= Count)
+            {
+                throw new IndexOutOfRangeException("out of range");
+            }
+
+            return _queue[index];
+        }
+    }
+
+    public T MyDequeue()
+    {
+        T start = _queue[0];
+        for (int i = 1; i < Count; i++)
+        {
+            _queue[i-1] = _queue[i];
+        }
+
+        _queue[--Count] = default(T);
+        return start;
+    }
+
+    public void MyEnqueue(T item)
+    {
+        if (Count == Capacity)
+        {
+            Capacity *= 2;
+            T[] newqueue = new T[Capacity];
+            for (int i = 0; i < Count; i++)
+            {
+                newqueue[i] = _queue[i];
+            }
+
+            _queue = newqueue;
+        }
+
+        _queue[Count++] = item;
+    }
+
+    public T MyPeek()
+    {
+        return _queue[Count - 1];
+    }
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        MyQueue<string> queue = new MyQueue<string>(4);
+        queue.MyEnqueue("A");
+        queue.MyEnqueue("B");
+        queue.MyEnqueue("C");
+        queue.MyEnqueue("D");
+        queue.MyPeek();
+        Console.WriteLine("Top element (peek): " + queue.MyPeek()); 
+        Console.WriteLine("Count: " + queue.Count);
+        string popped =queue.MyDequeue(); 
+        Console.WriteLine("Popped element: " + popped); 
+        Console.WriteLine("Count after pop: " + queue.Count);
+
+    }
+}
