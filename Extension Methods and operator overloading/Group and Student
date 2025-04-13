@@ -1,0 +1,108 @@
+public class Student
+{
+    public string Name { get; }
+
+    public Student(string name)
+    {
+        Name = name;
+    }
+}
+public class Group
+{
+    public List<Student> Students { get; set; }
+    
+
+    public Group(List<Student> students)
+    {
+        Students = students;
+    }
+
+    public static bool operator true(Group group)
+    {
+        return group.Students.Count > 0 && group.Students != null;
+    }
+
+    public static bool operator false(Group group)
+    {
+        return group.Students.Count == 0 || group.Students == null;
+    }
+
+    public static Group operator +(Group group1, Group group2)
+    {
+        // List<Student> newStudents = new List<Student>();
+        // foreach (var item in group1.Students)
+        // {
+        //     newStudents.Add(item);
+        // }
+        // foreach (var s in group2.Students)
+        // {  newStudents.Add(s);}
+        //
+        // return new Group(newStudents);
+         List<Student> newStudents = new List<Student>(group1.Students);
+         newStudents.AddRange(group2.Students);
+         return new Group(newStudents);
+    }
+
+    public static Group operator -(Group group1, Group group2)
+    {
+        List<Student> result = new List<Student>();
+        foreach (var student1 in group1.Students)
+        {
+            bool found = false;
+            foreach (var student2 in group2.Students)
+            {
+                if (student1.Name == student2.Name)
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                result.Add(student1);
+            }
+        }
+
+        return new Group(result);
+    }    
+}
+class Program
+{
+    static void Main()
+    {
+        Student s1 = new Student("Ann");
+        Student s2 = new Student("Sam");
+        Student s3 = new Student("John");
+        Student s4 = new Student("Emma");
+        Student s5 = new Student("Ann");
+
+        Group group1 = new Group(new List<Student> { s1, s2, s3 });
+        Group group2 = new Group(new List<Student> { s4, s5 });
+
+        if (group1)
+            Console.WriteLine("Group1 has students.");
+        else
+            Console.WriteLine("Group1 is empty.");
+
+        Group emptyGroup = new Group(new List<Student>());
+        if (emptyGroup)
+            Console.WriteLine("EmptyGroup has students.");
+        else
+            Console.WriteLine("EmptyGroup is empty.");
+
+        Group combined = group1 + group2;
+        Console.WriteLine("\nCombined group (Group1 + Group2):");
+        foreach (var s in combined.Students)
+        {
+            Console.WriteLine($"- {s.Name}");
+        }
+
+        Group subtracted = group1 - group2;
+        Console.WriteLine("\nGroup1 - Group2 result:");
+        foreach (var s in subtracted.Students)
+        {
+            Console.WriteLine($"- {s.Name}");
+        }
+    }
+}
