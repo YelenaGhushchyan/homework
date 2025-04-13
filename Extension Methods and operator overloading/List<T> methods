@@ -1,0 +1,119 @@
+public class Student
+{
+    public string Name { get; }
+    public int Age { get; }
+
+    public Student(string name, int age)
+    {
+        Name = name;
+        Age = age;
+    }
+
+    public override string ToString()
+    {
+        return $"{Name}, Age: {Age}";
+    }
+}
+
+static class MyListExtenssions
+{
+    public static void Shuffle<T>(this List<T> list)
+    {
+        Random rand = new Random();
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int j = rand.Next(0, i + 1);
+            T temp = list[i];
+            list[i] = list[j];
+            list[j] = temp;
+        }
+    }
+
+    public static void Reverse<T>(this List<T> list)
+    {
+        for (int i = 0; i < list.Count / 2; i++)
+        {
+            T temp = list[i];
+            list[i] = list[list.Count - 1 - i];
+            list[list.Count - 1 - i] = temp;
+        }
+    }
+
+    public static List<T> Slice<T>(this List<T> list, int start, int end)
+    {
+        List<T> newList = new List<T>();
+        if (start < 0)
+        {
+            start = list.Count + start;
+        }
+
+        if (end < 0)
+        {
+            end = list.Count + end;
+        } 
+
+        for (int i = start; i < end; i++)
+        {
+            if (i >= 0 && i < list.Count)
+                newList.Add(list[i]);
+        }
+
+        return newList;
+    }
+
+    public static T At<T>(this List<T> list, int index)
+    {
+        if (index < 0)
+        {
+            index = list.Count + index;
+        }
+        if (index >= 0 && index < list.Count)
+        {
+            return list[index];  
+        }
+
+        throw new Exception("Index out of range.");
+    }
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        List<Student> students = new List<Student>
+        {
+            new Student("Anna", 20),
+            new Student("Ben", 22),
+            new Student("Charlie", 23),
+            new Student("Diana", 21),
+            new Student("Emma", 24)
+        };
+
+        Console.WriteLine("Original List:");
+        foreach (var student in students)
+            Console.WriteLine(student);
+
+        
+        students.Shuffle();
+        Console.WriteLine("\nShuffled List:");
+        foreach (var student in students)
+            Console.WriteLine(student);
+
+        
+        students.Reverse();
+        Console.WriteLine("\nReversed List:");
+        foreach (var student in students)
+            Console.WriteLine(student);
+
+        
+        var slicedStudents = students.Slice(1, 4);
+        Console.WriteLine("\nSliced List (from index 1 to 4):");
+        foreach (var student in slicedStudents)
+            Console.WriteLine(student);
+        
+            var studentAtIndex = students.At(2); 
+            Console.WriteLine("\nStudent at index 2:");
+            Console.WriteLine(studentAtIndex);
+        
+    }
+}
