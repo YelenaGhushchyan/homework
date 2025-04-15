@@ -1,0 +1,50 @@
+public class Notifier
+{
+    public delegate void Transformer(string msg);
+
+    private Transformer _transformer;
+
+    public void ChooseDelegateMethod(Transformer t)
+    {
+        _transformer = t;
+    }
+
+    public void Send(string msg)
+    {
+        if (_transformer != null)
+        {
+            _transformer(msg);
+        }
+        else
+        {
+            Console.WriteLine("error");
+        }
+    }
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        Notifier n = new Notifier();
+        n.ChooseDelegateMethod(Consoles);
+        n.Send("hello Console");
+        n.ChooseDelegateMethod(File);
+        n.Send("hello file");
+        n.ChooseDelegateMethod(EMail);
+        n.Send("hello email");
+    }
+
+    static void Consoles(string msg)
+    {
+        Console.WriteLine($"[Console]: {msg}");
+    }
+    static void File(string msg)
+    {
+        Console.WriteLine($"[File]: {msg}");
+    }
+    static void EMail(string msg)
+    {
+        Console.WriteLine($"[Email]: {msg}");
+    }
+}
