@@ -1,0 +1,40 @@
+class MyProgram
+{
+    public delegate double Transformer(double x,double y);
+
+    public static void Main()
+    {
+        string op = Console.ReadLine();
+
+        Transformer t;
+
+        switch (op)
+        {
+            case "+":
+                t = Add;
+                Console.WriteLine(t(3,4));
+                break;
+            case "-":
+                t = Subtract;
+                Console.WriteLine(t(3,4));
+                break;
+            case "*":
+                t = Multipy;
+                Console.WriteLine(t(3,4));
+                break;
+            case "/":
+                t = Divide;
+                Console.WriteLine(t(3,4));
+                break;
+            default:
+                Console.WriteLine("Invalid operation.");
+                return;
+        }
+    }
+
+    public static double Add(double x, double y) => x + y;
+    public static double Subtract(double x, double y) => x - y;
+    public static double Multipy(double x, double y) => x * y;
+    
+    static double Divide(double a, double b) => b != 0 ? a / b : throw new DivideByZeroException();
+}
