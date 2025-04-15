@@ -1,0 +1,47 @@
+public class MathProcessor
+{
+    public delegate int Transformer(int x,int y);
+
+    private Transformer _transformer;
+
+    public void ChooseDelegateMethod(Transformer newt)
+    {
+        _transformer = newt;
+    }
+
+    public void Calculate(int a, int b)
+    {
+        if (_transformer != null)
+        {
+            int result = _transformer(a, b);
+            Console.WriteLine($"Result: {result}");
+        }
+        else
+        {
+            Console.WriteLine("No operation chosen.");
+        }
+    }
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        MathProcessor m = new MathProcessor();
+        m.ChooseDelegateMethod(Add);
+        m.Calculate(3, 4);
+        m.ChooseDelegateMethod(Sub);
+        m.Calculate(10,5);
+        m.ChooseDelegateMethod(Mul);
+        m.Calculate(21,7);
+        m.ChooseDelegateMethod(Div);
+        m.Calculate(19,5);
+    }
+
+    static int Add(int a, int b) => a + b;
+    static int Sub(int a, int b) => a - b;
+    static int Mul(int a, int b) => a * b;
+    static int Div(int a, int b) => b != 0 ? a / b : throw new DivideByZeroException();
+}
+
+
