@@ -1,0 +1,38 @@
+class MyProgram
+{
+    public static void Main()
+    {
+        List<int> list = new List<int>{1,92,33,46,25,62,7};
+        Predicate<int> condition = x => x % 2 == 0;
+        List<int> result = Filter(list,condition);
+        foreach (var item in result)
+        {
+            Console.WriteLine(item);
+        }
+        Console.WriteLine("\t");
+
+        List<string> list1 = new List<string> { "Yelena", "Sona", "Marie", "Ani", "Lusnyaks" };
+        char start = 'Y';
+        Predicate<string> condition1 = str => str.StartsWith(start);
+        List<string> result1 = Filter(list1, condition1);
+        foreach (var item in result1)
+        {
+            Console.WriteLine(item);
+        }
+
+    }
+
+    public static List<T> Filter<T>(List<T> list, Predicate<T> condition)
+    {
+        List<T> result = new List<T>();
+        foreach (var item in list)
+        {
+            if (condition(item))
+            {
+                result.Add(item);
+            }
+        }
+
+        return result;
+    }
+}
