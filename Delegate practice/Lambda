@@ -1,0 +1,46 @@
+public class Person
+{
+    public int Age { get; private set; }
+    public string Name { get; private set; }
+
+    public Person(int age, string name)
+    {
+        Age = age;
+        Name = name;
+    }
+}
+
+public class MyProgram
+{
+    public delegate int Comparison<in T>(T x, T y);
+    public static void Main()
+    {
+        List<Person> people = new List<Person>(5)
+        {
+            new Person(12, "Anna"),
+            new Person(23, "Ani"),
+            new Person(22, "John"),
+            new Person(89, "Bill"),
+            new Person(3, "Marie")
+        };
+        people.Sort((p1, p2) =>
+        {
+            return p2.Age.CompareTo(p1.Age);
+        });
+        foreach (var person in people)
+        {
+            Console.WriteLine($"{person.Name}, {person.Age}");
+        }
+        Console.WriteLine("\t");
+        people.Sort((p1, p2) =>
+        {
+            return p1.Name.CompareTo(p2.Name);   
+        });
+        foreach (var person in people)
+        {
+            Console.WriteLine($"{person.Name}, {person.Age}");
+        }
+    }
+
+  
+}
