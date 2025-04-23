@@ -1,0 +1,26 @@
+public static class MyExtenssion
+{
+    public static bool Every<T>(this List<T> list, Func<T, bool> x)
+    {
+        List<T> EmptyList = new List<T>();
+        foreach (var item in list)
+        {
+            if (!x(item))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        List<int> list = new List<int>(){1,2,3,4,5,6};
+        Console.WriteLine(list.Every(x => x > 0));
+    }
+}
+
