@@ -1,0 +1,52 @@
+class MyProgram
+{
+    public static void Main()
+    {
+        var y = ManagedCache();
+        Console.WriteLine(y.IsPrime(3));
+        Console.WriteLine(y.IsPrime(3));
+        
+        Console.WriteLine(y.IsPrime(9));
+        Console.WriteLine(y.IsPrime(9));
+        
+        y.ClearCache();
+        Console.WriteLine(y.IsPrime(3));
+    }
+    public static (Func<int, bool> IsPrime, Action ClearCache)ManagedCache()
+    {
+        var cache = new Dictionary<int, bool>();
+        Func<int, bool> isPrime = number =>
+        {
+            if (cache.ContainsKey(number))
+            {
+                Console.WriteLine("from cache");
+                return cache[number];
+            }
+
+            bool result = true;
+            if (number < 2)
+            {
+                result = false;
+            }
+            else
+            {
+                for (int i = 2; i <= number / 2; i++)
+                {
+                    if (number % i == 0)
+                    {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+
+            cache[number] = result; 
+            return result;
+        };
+        Action clearCache = () =>
+            {
+                cache.Clear();
+            };
+        return (isPrime, clearCache);
+    }
+}
