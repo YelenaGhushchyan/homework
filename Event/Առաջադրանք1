@@ -1,0 +1,87 @@
+public class Shop
+{
+    public string Name { get; }
+
+    public Shop(string name)
+    {
+        Name = name;
+    }
+    private int _discount;
+
+    public int Discount
+    {
+        get => _discount;
+        set
+        {
+            if (_discount != value)
+            {
+                int old = _discount;
+                _discount = value;
+                OnDiscountChanged(new DiscountChangedEventArgs(old,_discount));
+            }
+        }
+    }
+    public event EventHandler<DiscountChangedEventArgs> DiscountChanged;
+
+    protected virtual void OnDiscountChanged(DiscountChangedEventArgs e)
+    {
+        DiscountChanged?.Invoke(this,e);
+    }
+}
+
+public class Customer
+{
+    public string Name { get; }
+
+    public Customer(string name, Shop shop)
+    {
+        Name = name;
+        Subscribe(shop);
+    }
+
+    private void Subscribe(Shop shop)
+    {
+        shop.DiscountChanged += OnDiscountChanged;
+    }
+
+    private void OnDiscountChanged(object sender, DiscountChangedEventArgs e)
+    {
+        Shop s = sender as Shop;
+        if (e.NewDiscount > e.OldDiscount)
+        {
+            Console.WriteLine($"[{Name}]-ն ասում է, որ [{s.Name}] խանութում զեղչը բարձրացել է {e.OldDiscount}%-ից մինչև {e.NewDiscount}%։\"");
+        }
+        else
+        {
+            Console.WriteLine($"[{Name}]-ն ասում է, որ [{s.Name}] խանութում զեղչը նվազել է {e.OldDiscount}%-ից մինչև {e.NewDiscount}%։");
+
+        }
+    }
+}
+
+public class DiscountChangedEventArgs : EventArgs
+{
+    public int OldDiscount { get; }
+    public int NewDiscount { get; }
+
+    public DiscountChangedEventArgs(int oldDiscount, int newDiscount)
+    {
+        OldDiscount = oldDiscount;
+        NewDiscount = newDiscount;
+    }
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        Shop shop = new Shop("MShop");
+        Customer alice = new Customer("Alice", shop);
+        Customer bob = new Customer("Bob", shop);
+        Customer charlie = new Customer("Charlie", shop);
+        
+        shop.Discount = 10;  
+        shop.Discount = 20;
+        shop.Discount = 5;
+    }
+}
