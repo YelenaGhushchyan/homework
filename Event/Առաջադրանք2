@@ -1,0 +1,52 @@
+public interface IReadBox<out T>
+{
+    public T this[int index] { get; }
+}
+
+public interface IWriteBox<in T>
+{
+    public void Add(T item);
+}
+
+public class MyList<T> : IReadBox<T>, IWriteBox<T>
+{
+    private List<T> _list = new List<T>();
+
+    public T this[int index] => _list[index];
+    public void Add(T item)
+    {
+        _list.Add(item);
+    }
+}
+public class Animal
+{
+    public string Name { get; set; }
+}
+
+public class Cat : Animal
+{
+}
+
+public static class Tester
+{
+    public static void PrintFirstAnimal(IReadBox<Animal> animals)
+    {
+        Console.WriteLine($"Առաջին կենդանին՝ {animals[0].Name}");
+    }
+
+    public static void AddCat(IWriteBox<Cat> cats)
+    {
+        cats.Add(new Cat { Name = "Whiskers" });
+    }
+}
+class Program
+{
+    static void Main()
+    {
+        MyList<Cat> myCats = new MyList<Cat>();
+
+        Tester.AddCat(myCats);
+
+        Tester.PrintFirstAnimal(myCats);
+    }
+}
