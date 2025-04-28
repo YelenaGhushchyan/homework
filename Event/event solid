@@ -1,0 +1,84 @@
+public interface INotificationSender
+{
+    public void Send(NotificationMessage message);
+}
+public class NotificationMessage
+{
+    public string Title { get; }
+    public string Body { get; }
+    public string Recipient { get; }
+
+    public NotificationMessage(string title, string body, string recipient)
+    {
+        Title = title;
+        Body = body;
+        Recipient = recipient;
+    }
+    public override string ToString()
+    {
+        return $"Title: {Title}, Body: {Body}, Recipient: {Recipient}";
+    }
+}
+
+public class EmailSender : INotificationSender
+{
+    public void Send(NotificationMessage message)
+    {
+        Console.WriteLine($"from Email: {message}");
+    }
+}
+
+public class SmsSender : INotificationSender
+{
+    public void Send(NotificationMessage message)
+    {
+        Console.WriteLine($"from Sms: {message}");
+    }
+}
+
+public class PushNotificationSender : INotificationSender
+{
+    public void Send(NotificationMessage message)
+    {
+        Console.WriteLine($"from pushNotification: {message}");
+    }
+}
+
+public class NotificationManager
+{
+    private readonly INotificationSender _notificationSender;
+    public event Action<NotificationMessage> OnNotificationReady;
+
+    public void PrepareNotification(NotificationMessage message)
+    {
+        OnNotificationReady?.Invoke(message);
+    }
+    
+    private void HandleNotificationReady(NotificationMessage message)
+    {
+        _notificationSender.Send(message);
+    }
+    public NotificationManager(INotificationSender notificationSender)
+    {
+        _notificationSender = notificationSender;
+        OnNotificationReady += HandleNotificationReady;
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var emailSender = new EmailSender();
+
+        var manager = new NotificationManager(emailSender);
+
+        var message = new NotificationMessage(
+            "Welcome!",
+            "Thank you for joining us.",
+            "user@example.com"
+        );
+
+        manager.PrepareNotification(message);
+    }
+}
