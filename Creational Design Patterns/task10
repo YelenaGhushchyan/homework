@@ -1,0 +1,61 @@
+public interface IBrushes
+{
+     void Brush();
+}
+
+public class PencilBrush : IBrushes
+{
+     public void Brush()
+     {
+          Console.WriteLine("printed with pencil");
+     }
+}
+
+public class InkBrush : IBrushes
+{
+     public void Brush()
+     {
+          Console.WriteLine("printed with ink");
+     }
+     
+}
+
+public class PaintBrush : IBrushes
+{
+     public void Brush()
+     {
+          Console.WriteLine("printed with paint");
+     }
+}
+
+public class BrushFactory
+{
+     public IBrushes ChooseBrush(string massage)
+     {
+          switch (massage.ToLower())
+          {
+               case "pencil":
+                    return new PencilBrush();
+               case "ink":
+                    return new InkBrush();
+               case "paint":
+                    return new PaintBrush();
+               default:
+                    throw new ArgumentException("Choose from ink,paint,pencil");
+              
+          }
+     }
+}
+
+public class MyProgram
+{
+     public static void Main()
+     {
+          var brush = new BrushFactory();
+          string massage = Console.ReadLine();
+          IBrushes brushes = brush.ChooseBrush(massage);
+          brushes.Brush();
+          
+
+     }
+}
