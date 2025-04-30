@@ -1,0 +1,105 @@
+public interface IShape
+{
+    void Draw();
+    IShape Clone();
+}
+
+public class Circle : IShape
+{
+    public double Radius { get; }
+
+    public Circle(double radius)
+    {
+        Radius = radius;
+    }
+
+    public void Draw()
+    {
+        Console.WriteLine("Drawing the circle with radius: " + Radius);
+    }
+
+    public IShape Clone()
+    {
+        return new Circle(this.Radius);
+    }
+}
+
+public class Square : IShape
+{
+    public int Side { get; }
+
+    public Square(int side)
+    {
+        Side = side;
+    }
+
+    public void Draw()
+    {
+        Console.WriteLine("Drawing the square with side length: " + Side);
+    }
+
+    public IShape Clone()
+    {
+        return new Square(Side);
+    }
+}
+
+public class Rectangle : IShape
+{
+    public int Height { get; }
+    public int Width { get; }
+
+    public Rectangle(int height, int width)
+    {
+        Height = height;
+        Width = width;
+    }
+
+    public void Draw()
+    {
+        Console.WriteLine("Drawing the rectangle with height: " + Height + " and width: " + Width);
+    }
+
+    public IShape Clone()
+    {
+        return new Rectangle(Height, Width);
+    }
+}
+
+class GraphicEditor
+{
+    public void DrawShape(IShape shape)
+    {
+        shape.Draw();
+    }
+
+    public IShape DuplicateShape(IShape shape)
+    {
+        return shape.Clone();
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        IShape circle = new Circle(5);
+        IShape square = new Square(4);
+        IShape rectangle = new Rectangle(6, 8);
+
+        GraphicEditor editor = new GraphicEditor();
+
+        editor.DrawShape(circle);
+        editor.DrawShape(square);
+        editor.DrawShape(rectangle);
+
+        var clonedCircle = editor.DuplicateShape(circle);
+        var clonedSquare = editor.DuplicateShape(square);
+        var clonedRectangle = editor.DuplicateShape(rectangle);
+
+        Console.WriteLine("\nDuplicated Shapes:");
+        editor.DrawShape(clonedCircle);
+        editor.DrawShape(clonedSquare);
+        editor.DrawShape(clonedRectangle);
+    }
+}
