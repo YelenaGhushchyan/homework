@@ -1,0 +1,79 @@
+public interface IButton
+{
+    void Render();
+}
+
+public interface ITextBox
+{
+    void Render();
+}
+
+public interface ICheckBox
+{
+    void Render();
+}
+
+public interface IGUI
+{
+    IButton CreateButton();
+    ITextBox CreateTextBox();
+    ICheckBox CreateCheckBox();
+}
+public class LightButton : IButton
+{
+    public void Render() => Console.WriteLine("Rendering Light Button");
+}
+
+public class LightTextBox : ITextBox
+{
+    public void Render() => Console.WriteLine("Rendering Light TextBox");
+}
+
+public class LightCheckBox : ICheckBox
+{
+    public void Render() => Console.WriteLine("Rendering Light CheckBox");
+}
+
+public class LightTheme : IGUI
+{
+    public IButton CreateButton() => new LightButton();
+    public ITextBox CreateTextBox() => new LightTextBox();
+    public ICheckBox CreateCheckBox() => new LightCheckBox();
+}
+public class DarkButton : IButton
+{
+    public void Render() => Console.WriteLine("Rendering Dark Button");
+}
+
+public class DarkTextBox : ITextBox
+{
+    public void Render() => Console.WriteLine("Rendering Dark TextBox");
+}
+
+public class DarkCheckBox : ICheckBox
+{
+    public void Render() => Console.WriteLine("Rendering Dark CheckBox");
+}
+
+public class DarkTheme : IGUI
+{
+    public IButton CreateButton() => new DarkButton();
+    public ITextBox CreateTextBox() => new DarkTextBox();
+    public ICheckBox CreateCheckBox() => new DarkCheckBox();
+}
+class Program
+{
+    static void Main()
+    {
+        IGUI factory;
+        factory = new LightTheme(); 
+
+        IButton button = factory.CreateButton();
+        ITextBox textBox = factory.CreateTextBox();
+        ICheckBox checkBox = factory.CreateCheckBox();
+
+        button.Render();
+        textBox.Render();
+        checkBox.Render();
+    }
+}
