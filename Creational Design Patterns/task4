@@ -1,0 +1,33 @@
+public interface Clonable<T>
+{
+    T Clone();
+}
+public class Employee : Clonable<Employee>
+{
+    public string Name { get; set; }
+    public int Age { get; }
+
+    public Employee(string name, int age)
+    {
+        Name = name;
+        Age = age;
+    }
+
+    public Employee Clone()
+    {
+        return new Employee(Name, Age);
+    }
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        Employee employee = new Employee("Ani", 13);
+        Employee employee1 = employee.Clone();
+        
+        Console.WriteLine("Original: " + employee.Name + ", " + employee.Age);
+        Console.WriteLine("Copy: " + employee1.Name + ", " + employee1.Age);
+        
+    }
+}
