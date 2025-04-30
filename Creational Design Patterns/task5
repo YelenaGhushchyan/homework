@@ -1,0 +1,36 @@
+public class PrinterSpooler
+{
+    private static PrinterSpooler? _instance;
+    private PrinterSpooler()
+    {
+        Console.WriteLine("Spooler Initialized");
+    }
+
+    public static PrinterSpooler Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new PrinterSpooler();
+            }
+            return _instance;
+        }
+    }
+
+    public void Print(string document)
+    {
+        Console.WriteLine($"Printing: {document}");
+    }
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        var spooler = PrinterSpooler.Instance;
+        spooler.Print("document");
+        var spooler2 = PrinterSpooler.Instance;
+        spooler2.Print("Presentation.pptx");
+    }
+}
