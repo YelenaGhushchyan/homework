@@ -1,0 +1,83 @@
+public interface IEngine
+{
+    string Name { get; }
+    void StartEngine();
+}
+
+public interface IFuel
+{
+    string Name { get; }
+    void Fuel();
+}
+
+public class ElectricFuel : IFuel
+{
+    public string Name => "ElectricFuel";
+
+    public void Fuel()
+    {
+        Console.WriteLine("Electric Fuel");
+    }
+}
+
+public class DieselFuel : IFuel
+{
+    public string Name => "diesel Fuel";
+
+    public void Fuel()
+    {
+        Console.WriteLine("diesel");
+    }
+}
+public class ElectricEngine : IEngine
+{
+    public string Name => "Electric Engine";
+
+    public void StartEngine()
+    {
+        Console.WriteLine("Starting Electric Engine");
+    }
+}
+
+public class DieselEngine : IEngine
+{
+    public string Name => "Diesel Engine";
+
+    public void StartEngine()
+    {
+        Console.WriteLine("Starting Diesel Engine");
+    }
+}
+
+public interface ICarPart
+{
+    IFuel CreateFuel();
+    IEngine CreateEngine();
+}
+
+public class ElectricCarParts : ICarPart
+{
+    public  IFuel CreateFuel() => new ElectricFuel();
+    public IEngine CreateEngine() => new ElectricEngine();
+}
+
+public class DieselCarParts : ICarPart
+{
+    public IFuel CreateFuel() => new DieselFuel();
+    public IEngine CreateEngine() => new DieselEngine();
+}
+class MyProgram
+{
+    public static void Main()
+    {
+        ICarPart part = new ElectricCarParts();
+        IEngine electricEngine = part.CreateEngine();
+        IFuel electricFuel = part.CreateFuel();
+        
+        Console.WriteLine(electricEngine.Name);
+        electricEngine.StartEngine();
+        
+        Console.WriteLine(electricFuel.Name);
+        electricFuel.Fuel();
+    }
+}
