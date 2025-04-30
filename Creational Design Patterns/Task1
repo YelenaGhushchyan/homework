@@ -1,0 +1,49 @@
+class ConfigurationManager
+{
+    public string Theme { get; set; }
+    public string Language { get; set; }
+    public double Version { get; set; }
+
+    private ConfigurationManager()
+    {
+        Theme = "Dark";
+        Language = "Armenian";
+        Version = 2.1;
+    }
+
+    private static ConfigurationManager _instance;
+
+    public static ConfigurationManager instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new ConfigurationManager();
+            }
+
+            return _instance;
+        }
+    }
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        var config = ConfigurationManager.instance;
+        Console.WriteLine(config.Language);
+        Console.WriteLine(config.Version);
+        Console.WriteLine(config.Theme);
+        
+        config.Language = "english";
+        config.Version = 3.4;
+        config.Theme = "aa";
+
+        var config1 = ConfigurationManager.instance;
+        Console.WriteLine(config1.Language);
+        Console.WriteLine(config1.Version);
+        Console.WriteLine(config1.Theme);
+        
+    }
+}
