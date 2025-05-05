@@ -1,0 +1,46 @@
+using System.Globalization;
+public class Product
+{
+    public string Name { get; set; }
+    public double Price { get; set; }
+}
+
+interface IProductProvider
+{
+    Product GetProduct();
+}
+
+public class CsvProductAdapter : IProductProvider
+{
+    private readonly string _csv;
+
+    public CsvProductAdapter(string csv)
+    {
+        _csv = csv;
+    }
+
+    public Product GetProduct()
+    {
+        string[] str = _csv.Split(',');
+        string name = str[0];
+        double price = double.Parse(str[1], CultureInfo.InvariantCulture);
+
+        return new Product
+        {
+            Name = name,
+            Price = price
+        };
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        string csvLine = "Chair,129.99";
+        IProductProvider adapter = new CsvProductAdapter(csvLine);
+        Product product = adapter.GetProduct();
+
+        Console.WriteLine($"Name: {product.Name}, Price: {product.Price}");
+    }
+}
