@@ -1,0 +1,73 @@
+public interface IBulletType
+{
+    void Render(int x, int y, int direction);
+}
+
+public class ConcreteBulletType : IBulletType
+{
+    private string _name;
+    private double _damage;
+
+    public ConcreteBulletType(string name, double damage)
+    {
+        _name = name;
+        _damage = damage;
+    }
+    public void Render(int x, int y, int direction)
+    {
+        Console.WriteLine($"Drawing {_name} bullet at ({x}, {y}) heading {direction}° with damage {_damage}");
+    }
+}
+
+public class BulletTypeFactory
+{
+    private Dictionary<string, IBulletType> _bulletTypes = new();
+    public IBulletType GetBulletType(string spriteName, int damage)
+    {
+        string key = spriteName + damage;
+        if (!_bulletTypes.ContainsKey(key))
+        {
+            _bulletTypes[key] = new ConcreteBulletType(spriteName, damage);
+        }
+        return _bulletTypes[key];
+    }
+}
+public class Bullet
+{
+    private int _x, _y, _direction, _speed;
+    private IBulletType _bulletType;
+
+    public Bullet(int x, int y, int direction, int speed, IBulletType bulletType)
+    {
+        _x = x;
+        _y = y;
+        _direction = direction;
+        _speed = speed;
+        _bulletType = bulletType;
+    }
+
+    public void Render()
+    {
+        _bulletType.Render(_x, _y, _direction);
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var factory = new BulletTypeFactory();
+        List<Bullet> bullets = new();
+
+        bullets.Add(new Bullet(0, 0, 45, 10, factory.GetBulletType("YellowLaser", 10)));
+        bullets.Add(new Bullet(5, 2, 45, 10, factory.GetBulletType("YellowLaser", 10)));
+        bullets.Add(new Bullet(10, 5, 90, 8, factory.GetBulletType("RedFireball", 25)));
+        bullets.Add(new Bullet(15, 10, 90, 8, factory.GetBulletType("RedFireball", 25)));
+        bullets.Add(new Bullet(20, 20, 30, 12, factory.GetBulletType("BlueIceShard", 15)));
+
+        foreach (var bullet in bullets)
+        {
+            bullet.Render();
+        }
+    }
+}
