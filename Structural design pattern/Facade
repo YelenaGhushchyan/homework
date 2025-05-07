@@ -58,6 +58,18 @@ public class ComputerFacade
         _hardDrive.Read(12, 4);
         _gpu.Initialize();
     }
+    public void ShutdownComputer()
+    {
+        _cpu.Freeze();                 
+        Console.WriteLine("CPU is frozen for shutdown.");
+
+        Console.WriteLine("Memory is ready for shutdown.");  
+
+        _gpu.Initialize();             
+        Console.WriteLine("GPU is shutting down.");
+
+        Console.WriteLine("HardDrive is powering off.");    
+    }
 }
 
 class MyProgram
@@ -71,5 +83,6 @@ class MyProgram
 
         var computer = new ComputerFacade(cpu, memory, hardDrive, gpu);
         computer.ComputerStart();
+        computer.ShutdownComputer();
     }
 }
