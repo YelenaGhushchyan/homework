@@ -1,0 +1,82 @@
+public interface IDocument
+{
+    string GetContent();
+}
+
+public class PlainTextDocument : IDocument
+{
+    public string GetContent()
+    {
+        return $"Yelena";
+    }
+}
+
+public abstract class Decorator : IDocument
+{
+    protected IDocument _document;
+
+    public Decorator(IDocument document)
+    {
+        _document = document;
+    }
+
+    public abstract string GetContent();
+}
+
+public class BoldDecorator : Decorator
+{
+    public BoldDecorator(IDocument document) : base(document){}
+    public override string GetContent()
+    {
+        return $"<BOLD>{_document.GetContent()}</BOLD>";
+    }
+}
+public class ItalicDecorator : Decorator
+{
+    public ItalicDecorator(IDocument document) : base(document){}
+    public override string GetContent()
+    {
+        return $"<ITALIC>{_document.GetContent()}</ITALIC>";
+    }
+}
+
+public class UnderlineDecorator : Decorator
+{
+    public UnderlineDecorator(IDocument document) : base(document){}
+    public override string GetContent()
+    {
+        return $"<UNDERLINE>{_document.GetContent()}</UNDERLINE>";
+    }
+}
+
+public class HighlightDecorator : Decorator
+{
+    public HighlightDecorator(IDocument document) : base(document){}
+    public override string GetContent()
+    {
+        return $"<HIGHLIGHT>{_document.GetContent()}</HIGHLIGHT>";
+    }
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        IDocument text = new PlainTextDocument();
+        Console.WriteLine(text.GetContent());
+
+        text = new BoldDecorator(text);
+        Console.WriteLine(text.GetContent());
+
+        text = new HighlightDecorator(text);
+        Console.WriteLine(text.GetContent());
+
+        text = new ItalicDecorator(text);
+        Console.WriteLine(text.GetContent());
+
+        text = new UnderlineDecorator(text);
+        Console.WriteLine(text.GetContent());
+
+    }
+
+}
