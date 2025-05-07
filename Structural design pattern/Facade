@@ -1,0 +1,75 @@
+public class CPU
+{
+    public void Freeze()
+    {
+        Console.WriteLine("Computer is frozen");
+    }
+
+    public void Execute()
+    {
+        Console.WriteLine("Computer is executing");
+    }
+}
+
+public class Memory
+{
+    public void Load(int address, string data)
+    {
+        Console.WriteLine($"{data} is stored in the address{address}");
+    }
+}
+
+public class HardDrive
+{
+    public string Read(int sector, int size)
+    {
+        return $"Reading {size} bytes from sector {sector}";
+    }
+}
+
+public class GPU
+{
+    public void Initialize()
+    {
+        Console.WriteLine("GPU is initializing");
+    }
+}
+
+public class ComputerFacade
+{
+    private CPU _cpu;
+    private Memory _memory;
+    private HardDrive _hardDrive;
+    private GPU _gpu;
+
+    public ComputerFacade(CPU cpu,Memory memory,HardDrive hardDrive,GPU gpu)
+    {
+        _cpu = cpu;
+        _memory = memory;
+        _hardDrive = hardDrive;
+        _gpu = gpu;
+    }
+
+    public void ComputerStart()
+    {
+        _cpu.Execute();
+        _cpu.Freeze();
+        _memory.Load(10,"a");
+        _hardDrive.Read(12, 4);
+        _gpu.Initialize();
+    }
+}
+
+class MyProgram
+{
+    public static void Main()
+    {
+        var cpu = new CPU();
+        var memory = new Memory();
+        var hardDrive = new HardDrive();
+        var gpu = new GPU();
+
+        var computer = new ComputerFacade(cpu, memory, hardDrive, gpu);
+        computer.ComputerStart();
+    }
+}
