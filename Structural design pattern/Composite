@@ -1,0 +1,78 @@
+public interface ITaskItem
+{
+    string getName();
+    void Display(string indent);
+}
+
+public class SimpleTask : ITaskItem
+{
+    private string _name;
+
+    public SimpleTask(string name)
+    {
+        _name = name;
+    }
+
+    public string getName()
+    {
+        return _name;
+    }
+
+    public void Display(string indent)
+    {
+        Console.WriteLine($"{indent} {_name}");
+    }
+}
+
+public class CompositeTask : ITaskItem
+{
+    private string _name;
+    private List<ITaskItem> _subTasks;
+    public CompositeTask(string name)
+    {
+        _name = name;
+        _subTasks = new List<ITaskItem>();
+    }
+
+    public string getName()
+    {
+        return _name;
+    }
+    public void Display(string indent)
+    {
+        Console.WriteLine($"{indent}{_name}");
+        foreach (var task in _subTasks)
+        {
+            task.Display(indent + "   ");  
+        }
+    }
+    public void Add(ITaskItem task)
+    {
+        _subTasks.Add(task);  
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var task1 = new SimpleTask("Buy groceries");
+        var task2 = new SimpleTask("Call mom");
+        var task3 = new SimpleTask("Pay Bills");
+        var personalTasks = new CompositeTask("Personal Taks");
+       personalTasks.Add(task1);
+       personalTasks.Add(task2);
+       personalTasks.Add(task3);
+       
+       personalTasks.Display(" ");
+
+       var task4 = new SimpleTask("Fix login bug");
+       var task5 = new SimpleTask("Deploy new release");
+
+       var workTasks = new CompositeTask("Work Tasks");
+       workTasks.Add(task4);
+       workTasks.Add(task5);
+       
+       workTasks.Display(" ");
+    }
+}
