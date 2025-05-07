@@ -1,0 +1,81 @@
+using System;
+
+public interface IPaymentService
+{
+    void MakePayment(double amount);
+    void RefundPayment(double amount);
+}
+
+public class RealPaymentService : IPaymentService
+{
+    public void MakePayment(double amount)
+    {
+        Console.WriteLine($"[Payment] Processed payment of ${amount}");
+    }
+
+    public void RefundPayment(double amount)
+    {
+        Console.WriteLine($"[Refund] Processed refund of ${amount}");
+    }
+}
+
+public class User
+{
+    public string Username { get; }
+    public string Role { get; }
+
+    public User(string username, string role)
+    {
+        Username = username;
+        Role = role;
+    }
+}
+
+public class PaymentServiceProxy : IPaymentService
+{
+    private readonly RealPaymentService _realPaymentService;
+    private readonly User _user;
+
+    public PaymentServiceProxy(User user)
+    {
+        _realPaymentService = new RealPaymentService();
+        _user = user;
+    }
+
+    public void MakePayment(double amount)
+    {
+        Console.WriteLine($"[Proxy] User '{_user.Username}' attempting to make a payment...");
+        _realPaymentService.MakePayment(amount);
+    }
+
+    public void RefundPayment(double amount)
+    {
+        Console.WriteLine($"[Proxy] User '{_user.Username}' attempting to refund...");
+        if (_user.Role == "admin")
+        {
+            _realPaymentService.RefundPayment(amount);
+        }
+        else
+        {
+            Console.WriteLine("Access Denied: Only admins can issue refunds.");
+        }
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        var adminUser = new User("Alice", "admin");
+        var regularUser = new User("Bob", "user");
+
+        var adminPaymentService = new PaymentServiceProxy(adminUser);
+        var regularPaymentService = new PaymentServiceProxy(regularUser);
+
+        adminPaymentService.MakePayment(100.50);
+        adminPaymentService.RefundPayment(50.25);
+
+        regularPaymentService.MakePayment(20.75);
+        regularPaymentService.RefundPayment(10.00);
+    }
+}
