@@ -1,0 +1,81 @@
+public interface IPaymentProcessor
+{
+    void ProcessPayment(double amount);
+}
+
+public class StripeProcessor : IPaymentProcessor
+{
+    public void ProcessPayment(double amount)
+    {
+        Console.WriteLine($"Stripe processed payment of ${amount:F2}");
+    }
+}
+
+public class PayPalProcessor : IPaymentProcessor
+{
+    public void ProcessPayment(double amount)
+    {
+        Console.WriteLine($"PayPal processed payment of ${amount:F2}");
+    }
+}
+
+public class CryptoWalletProcessor : IPaymentProcessor
+{
+    public void ProcessPayment(double amount)
+    {
+        Console.WriteLine($"CryptoWallet processed crypto payment of ${amount:F2}");
+    }
+}
+
+public abstract class Payment
+{
+    protected IPaymentProcessor _paymentProcessor;
+
+    public Payment(IPaymentProcessor paymentProcessor)
+    {
+        _paymentProcessor = paymentProcessor;
+    }
+
+    public abstract void Pay(double amount);
+}
+
+public class BasicPayment : Payment
+{
+    public BasicPayment(IPaymentProcessor paymentProcessor) : base(paymentProcessor) { }
+
+    public override void Pay(double amount)
+    {
+        Console.WriteLine("Processing a basic one-time payment...");
+        _paymentProcessor.ProcessPayment(amount);
+    }
+}
+
+public class SubscriptionPayment : Payment
+{
+    public SubscriptionPayment(IPaymentProcessor paymentProcessor) : base(paymentProcessor) { }
+
+    public override void Pay(double amount)
+    {
+        Console.WriteLine("Processing a subscription payment...");
+        _paymentProcessor.ProcessPayment(amount);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        var stripeProcessor = new StripeProcessor();
+        var payPalProcessor = new PayPalProcessor();
+        var cryptoProcessor = new CryptoWalletProcessor();
+
+        var oneTimePayment = new BasicPayment(stripeProcessor);
+        oneTimePayment.Pay(49.99);
+
+        var monthlySubscription = new SubscriptionPayment(payPalProcessor);
+        monthlySubscription.Pay(9.99);
+
+        var cryptoOneTime = new BasicPayment(cryptoProcessor);
+        cryptoOneTime.Pay(99.99);
+    }
+}
