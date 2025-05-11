@@ -1,0 +1,128 @@
+namespace linq;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var students = new List<Student>
+        {
+            new Student(1,10, "Ani Hakobyan", 101, new List<int> { 201, 202 }),
+            new Student(2,23, "Narek Sahakyan", 102, new List<int> { 203, 204 }),
+            new Student(3, 34,"Aram Mkrtchyan", 101, new List<int> { 202, 205 }),
+            new Student(4, 8,"Lilit Petrosyan", 102, new List<int> { 203 }),
+            new Student(5, 34,"Karen Grigoryan", 101, new List<int> { 201, 205 }),
+            new Student(6, 22,"Sona Martirosyan", 103, new List<int> { 206 }),
+            new Student(7, 19,"David Aramyan", 103, new List<int> { 206, 207 }),
+            new Student(8, 21,"Arsen Vardanyan", 102, new List<int> { 204 }),
+            new Student(9, 31,"Mariam Melkonyan", 101, new List<int> { 201, 202 }),
+            new Student(10, 25,"Gor Hovhannisyan", 104, new List<int> { 208 }),
+            new Student(11, 17,"Nune Gevorgyan", 101, new List<int> { 202 }),
+            new Student(12, 16,"Vahagn Sargsyan", 104, new List<int> { 209 }),
+            new Student(13, 45,"Tatev Harutyunyan", 103, new List<int> { 207 }),
+            new Student(14, 36,"Hovsep Manukyan", 102, new List<int> { 203, 204 }),
+            new Student(15, 30,"Lusine Avetisyan", 101, new List<int> { 205 })
+        };
+
+
+        var departments = new List<Department>
+        {
+            new Department(101, "Applied Mathematics"),
+            new Department(102, "Computer Science")
+        };
+
+        var courses = new List<Course>
+        {
+            new Course(201, "Programming Basics", 3, 101),
+            new Course(202, "Algorithms and Data Structures", 4, 101),
+            new Course(203, "Database Fundamentals", 3, 102),
+            new Course(204, "Network Programming", 4, 102),
+            new Course(205, "Machine Learning", 5, 101)
+        };
+
+        var subjects = new List<Subject>
+        {
+            new Subject("Mathematics", 101),
+            new Subject("Programming", 102)
+        };
+        
+        //Գտնել Computer Science դեպարտամենտի ուսանողներին
+        var csDepartmentId = (from d in departments
+            where d.Name == "Computer Science"
+            select d.Id).FirstOrDefault();
+
+
+        var csStudents = from s in students
+            where s.DepartmentId == csDepartmentId
+            select s.FullName;
+
+        Console.WriteLine("Computer Science Students:");
+        foreach (var student in csStudents)
+        {
+            Console.WriteLine(student);
+        }
+        
+        //Գտնել այն կուրսերը, որտեղ ոչ մի ուսանող չկա
+        var emptyCourses = from c in courses
+            where !students.Any(s => s.EnrolledCourseIds.Contains(c.Id))
+            select c.Title;
+        
+        //Computer Science -ի բաժնում դասավանդվող առարկաների ցուցակը
+        var csDepartment = (from d in departments
+            where d.Name == "Computer Science"
+            select d.Id).FirstOrDefault();
+
+        var csSubjects = from sub in subjects
+            where sub.DepartmentId == csDepartmentId
+            select sub.Name;
+
+        Console.WriteLine("\nSubjects taught in Computer Science:");
+        foreach (var subject in csSubjects)
+        {
+            Console.WriteLine(subject);
+        }
+        //Գտնել այն դեպարտամենտները, որտեղ 5-ից ավել ուսանող կա
+        var res = (from s in students
+            group s by s.DepartmentId
+            into g
+            where g.Count() >= 5
+            select g.Key).FirstOrDefault();
+        var res1 = from d in departments
+            where d.Id == res
+            select d.Name;
+        foreach (var VARIABLE in res1)
+        {
+            Console.WriteLine(VARIABLE);
+        }
+        
+        //Գտնել տարիքով ամենափոքր ուսանողի դեպարտմանետի անունը
+        var young = (from s in students
+            orderby s.Age
+            select s.DepartmentId).FirstOrDefault();
+        var deptname = from d in departments
+            where d.Id == young
+            select d.Name;
+        foreach (var VARIABLE in deptname)
+        {
+            Console.WriteLine(VARIABLE);
+        }
+
+        // Ո՞ր դեպարտամենտում են ամենաշատ առարկաները դասավանդվում
+        var coursesub = (from c in courses
+            group c by c.DepartmentId into g
+            orderby g.Count() descending
+            select g.Key).FirstOrDefault();
+        var dept = from d in departments
+            where d.Id == coursesub
+            select d.Name;
+        foreach (var VARIABLE in dept)
+        {
+            Console.WriteLine(VARIABLE);
+        }
+
+
+
+
+
+
+    }
+}
