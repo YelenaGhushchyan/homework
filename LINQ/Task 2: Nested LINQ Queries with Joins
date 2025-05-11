@@ -1,0 +1,38 @@
+public class MyProgram
+{
+    public static void Main()
+    {
+        var students = new List<Student1>
+        {
+            new Student1(1, "Alice"),
+            new Student1(2, "Bob"),
+            new Student1(3, "Charlie")
+        };
+
+        var assigments = new List<Assigment>
+        {
+            new Assigment(1, "Math HW1", 85),
+            new Assigment(1, "Math HW2", 90),
+            new Assigment(2, "Science HW1", 75),
+            new Assigment(2, "Science HW2", 70),
+            new Assigment(3, "History HW1", 95)
+        };
+        var result = from s in students
+            where (from a in assigments
+                where s.Id == a.StudentId && a.Score > 80
+                select a).Any()
+            select new
+            {
+                s.Name,
+                HighestScore = (from a in assigments
+                where a.StudentId == s.Id
+                select a.Score).Max()
+            };
+        
+        foreach (var item in result)
+        {
+            Console.WriteLine($"{item.Name}: Highest Score = {item.HighestScore}");
+        }
+
+    }
+}
