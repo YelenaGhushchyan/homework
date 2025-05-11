@@ -1,0 +1,36 @@
+class MyClass
+{
+    public static void Main()
+    {
+        var students = new List<Student>
+        {
+            new Student(1, "Alice"),
+            new Student(2, "Bob"),
+            new Student(3, "Charlie")
+        };
+        var courses = new List<Course>
+        {
+            new Course(101, "Math", 4),
+            new Course(102, "Science", 3),
+            new Course(103, "History", 2)
+        };
+        var enrollments = new List<Enrollment>
+        {
+            new Enrollment(1, 101),
+            new Enrollment(1, 102),
+            new Enrollment(2, 102),
+            new Enrollment(3, 103)
+        };
+        var result = from s in students
+            join e in enrollments on s.Id equals e.StudentId
+            join c in courses on e.CourseId equals c.Id
+            where c.DifficultyLevel >= 3
+            orderby s.Name
+            select new { s.Name, c.CourseName, c.DifficultyLevel, };
+        foreach (var VARIABLE in result)
+        {
+            Console.Write(VARIABLE);
+        }
+        
+    }
+}
