@@ -1,0 +1,35 @@
+class Program
+{
+    public static void Main()
+    {
+        var students = new List<(int Id, string Name)>
+        {
+            (1, "Alice"),
+            (2, " Bob"),
+            (3, "Charlie")
+        };
+        var submissions = new List<(int StudentId, string AssignmentName)>
+        {
+            (1, "Math HW1"),
+            (1, "Math HW2"),
+            (2, "Science HW1")
+        };
+        var result = from s in students
+            join sub in submissions on s.Id equals sub.StudentId into studentSubmissions
+            select new
+            {
+                Name = s.Name,
+                SubmissionCount = studentSubmissions.Count()
+            };
+        var orderRes = result.OrderByDescending(x => x.SubmissionCount);
+        foreach (var VARIABLE in orderRes)
+        {
+            Console.WriteLine(VARIABLE);
+        }
+        
+
+
+
+    }
+    
+}
