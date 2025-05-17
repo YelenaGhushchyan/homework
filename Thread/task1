@@ -1,0 +1,63 @@
+class Program
+{
+    static List<int> nums = new List<int>();
+    static List<int> result = new List<int>(); 
+    static object locker = new object();
+    
+    public static void Main()
+    {
+        Thread t1 = new Thread(AddRandom);
+        Thread t2 = new Thread(SumRandom);
+        t1.Start();
+        t2.Start();
+        
+        t1.Join();
+        t2.Join();
+        Console.WriteLine($"Final Sums: [{string.Join(", ", result)}]");
+    }
+
+    public static void AddRandom()
+    {
+        Random rand = new Random();
+        for (int i = 0; i < 5; i++)
+        {
+            lock (locker)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    nums.Add(rand.Next(100));
+                }
+                Console.WriteLine("Producer: Added 10 numbers.Waiting for Consumer...");
+                Monitor.Pulse(locker);
+                Monitor.Wait(locker);
+            }
+        }
+    }
+
+    public static void  SumRandom()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            lock (locker)
+            {
+                while (nums.Count < 10)
+                {
+                    Monitor.Wait(locker);
+                }
+
+                Console.WriteLine("Consumer: Detected 10 items. Calculating sum...");
+
+                int sum = 0;
+                foreach (var VARIABLE in nums)
+                {
+                    sum += VARIABLE;
+                }
+                
+                result.Add(sum);
+                Console.WriteLine($"Consumer: Sum = {sum}. Notifying Producer...");
+                nums.Clear();
+                Monitor.Pulse(locker);
+            }
+        }
+    }
+}
