@@ -1,0 +1,35 @@
+namespace LeetCodes;
+
+public class Leet771
+{
+    static int NumJewelsInStones(string jewels, string stones)
+    {
+        bool[] arr = new bool[58];
+
+        foreach (var j in jewels)
+        {
+            arr[j - 'A'] = true;
+        }
+
+        int count = 0;
+
+        foreach (var s in stones)
+        {
+            if (arr[s - 'A'])
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public static void Main()
+    {
+        string jew = "aA";
+        string stones = "aAAbbbb";
+
+        int count = NumJewelsInStones(jew, stones);
+        Console.WriteLine(count);
+    }
+}
