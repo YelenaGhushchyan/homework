@@ -1,0 +1,96 @@
+namespace Stack;
+using System.Collections;
+public class Stack<T> : IEnumerable<T>
+{
+    public int Capacity { get; private set; }
+    private T[] _stack;
+    public int Count { get; private set; }
+    public Stack(int capacity)
+    {
+        if (capacity <= 0)
+        {
+            throw new ArgumentException("Capacity must be greater than 0.");
+        }
+
+        Capacity = capacity;
+        _stack = new T[capacity];
+        Count = 0;
+    }
+    public T this[int index]
+    {
+        get
+        {
+            if (index < 0 || index >= Count)
+            {
+                throw new IndexOutOfRangeException("out of range");
+            }
+
+            return _stack[index];
+        }
+    }
+
+    public void Push(T obj)
+    {
+        if (Count >= Capacity)
+        {
+            Resize(Capacity * 2);
+        }
+
+        _stack[Count++] = obj;
+    }
+    
+
+    public void Resize(int NewLength)
+    {
+        T[] newArr = new T[NewLength];
+        for (int i = 0; i < NewLength; i++)
+        {
+            newArr[i] = _stack[i];
+        }
+
+        _stack = newArr;
+        Capacity = NewLength;
+    }
+    
+    public T Peek()
+    {
+        if (Count == 0)
+            throw new InvalidOperationException("Stack is empty");
+
+        return _stack[Count - 1];
+    }
+
+    public T Pop()
+    {
+        if (Count == 0)
+        {
+            throw new InvalidOperationException("Stack underflow: Cannot pop from an empty stack.");
+        }
+        return _stack[--Count];
+    }
+    
+    public int Size()
+    {
+        return Count;
+    }
+
+    public bool Empty()
+    {
+        return Count == 0;
+    }
+    public IEnumerator<T> GetEnumerator()
+    {
+        for(int i = 0; i < Count; i++)
+        {
+            yield return _stack[i];
+        }
+    }
+    
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    
+
+}
