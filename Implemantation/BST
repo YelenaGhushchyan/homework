@@ -1,0 +1,319 @@
+using System.Xml.Xsl;
+
+
+public class Node<T> where T : IComparable<T>
+{
+    public Node<T> left { get; set; }
+    public Node<T> right { get; set; }
+    public T val { get; set; }
+    
+    public Node (T Val)
+    {
+        val = Val;
+        left = null;
+        right = null;
+    }
+}
+
+public class BST<T> where T : IComparable<T>
+{
+    public Node<T> root { get; set; }
+    public int Size { get; set; }
+
+    public BST()
+    {
+        root = null;
+        Size = 0;
+    }
+
+    public BST(T val)
+    {
+        root = new Node<T>(val);
+        Size = 1;
+    }
+
+    private void InorderRec(Node<T> node)
+    {
+        if (node == null) return;
+        InorderRec(node.left);
+        Console.WriteLine(node.val);
+        InorderRec(node.right);
+    }
+
+    public void Inorder()
+    {
+        InorderRec(root);
+    }
+
+    public void Preorder()
+    {
+        PreorderRec(root);
+    }
+    private void PreorderRec(Node<T> node)
+    {
+        if (node == null) return;
+        Console.WriteLine(node.val);   
+        PreorderRec(node.left);           
+        PreorderRec(node.right);          
+    }
+
+    public void Postorder()
+    {
+        PostorderRec(root);
+    }
+    private void PostorderRec(Node<T> node)
+    {
+        if (node == null) return;
+        PostorderRec(node.left);          
+        PostorderRec(node.right);        
+        Console.WriteLine(node.val);   
+    }
+
+    private Node<T> InsertRec(Node<T> node, T val)
+    {
+        if (node == null) return new Node<T>(val);
+        if (node.val.CompareTo(val) > 0)
+        {
+            node.left = InsertRec(node.left, val);
+        }
+        else if (node.val.CompareTo(val) < 0)
+        {
+            node.right = InsertRec(node.right, val);
+        }
+
+        return node;
+    }
+    
+    
+    public void InsertIterative(T val)
+    {
+        Node<T> newNode = new Node<T>(val);
+
+        if (root == null)
+        {
+            root = newNode;
+            return;
+        }
+
+        Node<T> current = root;
+        Node<T> anc = null;
+
+        while (current != null)
+        {
+            anc = current;
+            if (val.CompareTo(current.val) < 0)
+            {
+                current = current.left;
+            }
+            else
+            {
+                current = current.right;
+            }
+        }
+
+       
+        if (val.CompareTo(anc.val) < 0)
+        {
+            anc.left = newNode;
+        }
+        else
+        {
+            anc.right = newNode;
+        }
+    }
+    
+    public void Insert(T val)
+    {
+        root = InsertRec(root, val);
+    }
+
+    private bool SearchRec(Node<T> node, T val)
+    {
+        if (node == null) return false;
+        if (node.val.CompareTo(val) == 0) return true;
+        if (node.val.CompareTo(val) > 0)
+        {
+            return SearchRec(node.left, val);
+        }
+        else
+        {
+            return SearchRec(node.right, val);
+        }
+    }
+
+    public void Search(T val)
+    {
+        if (SearchRec(root, val))
+        {
+            Console.WriteLine("Yes");
+        }
+        else
+        {
+            Console.WriteLine("no");
+        }
+    }
+
+    private bool SearchIterative(Node<T> node, T val)
+    {
+        if (node == null) return false;
+        if (node.val.CompareTo(val) == 0) return true;
+        if (node.val.CompareTo(val) > 0)
+        {
+            node = node.left;
+        }
+        else
+        {
+            node = node.right;
+        }
+
+        return false;
+    }
+
+    private Node<T> Delete(Node<T> node, T val)
+    {
+        if (node == null) return node;
+        if (node.val.CompareTo(val) > 0)
+        {
+            node.left = Delete(node.left,val);
+        }
+        else if (node.val.CompareTo(val) < 0)
+        {
+            node.right = Delete(node.right, val);
+        }
+        else
+        {
+            if (node.left == null) return node.right;
+            if (node.right == null) return node.left;
+            Node<T> tmp = FindMin(node.right);
+            node.val = tmp.val;
+            node.right = Delete(node.right, tmp.val);
+        }
+
+        return node;
+    }
+
+    public void Delete(T val)
+    {
+        root = Delete(root, val);
+
+    }
+
+    private int GetHeight(Node<T> node)
+    {
+        if (node == null) return 0;
+        int left = GetHeight(node.left);
+        int right = GetHeight(node.right);
+
+        return Math.Max(left, right) + 1;
+    }
+    public void GetHeight()
+    {
+        Console.WriteLine("the height is " + GetHeight(root));
+    }
+    private Node<T> GetSuccessor(Node<T> node,Node<T> targetNode)
+    {
+        Node<T> anc = null;
+        Node<T> cur = node;
+
+        while (cur != null && cur != targetNode)
+        {
+            if (targetNode.val.CompareTo(cur.val) < 0)
+            {
+                anc = cur;
+                cur = cur.left;
+            }
+            else
+            {
+                cur = cur.right;
+            }
+        }
+        
+        if (cur == null)
+        {
+            return null;
+        }
+       
+
+        if (cur.right != null)
+        {
+            return FindMin(cur.right);
+        }
+
+        
+        return anc;
+    }
+
+    public void GetSuccessor(Node<T> targetNode)
+    {
+        GetSuccessor(root, targetNode);
+    }
+    
+    private Node<T> GetPredecessor(Node<T> node,Node<T> targetNode)
+    {
+        Node<T> anc = null;
+        Node<T> cur = node;
+
+        while (cur != null && cur != targetNode)
+        {
+            if (targetNode.val.CompareTo(cur.val) > 0)
+            {
+                anc = cur;
+                cur = cur.right;
+            }
+            else
+            {
+                cur = cur.left;
+            }
+        }
+
+        if (cur == null)
+        {
+            return null;
+        }
+
+        if (cur.left != null)
+        {
+            return FindMax(cur.left);
+        }
+
+        return anc;
+    }
+
+    public void GetPredecessor(Node<T> targetNode)
+    {
+        GetPredecessor(root, targetNode);
+    }
+
+    
+    private Node<T> FindMin(Node<T> node) 
+    {
+        if (node == null)
+        {
+            return node; 
+        }
+
+        while (node.left != null)
+        {
+            node = node.left;
+        }
+
+        return node;
+    }
+
+    private Node<T> FindMax(Node<T> node)
+    {
+        if (node == null)
+        {
+            return node; 
+        }
+
+        while (node.right != null)
+        {
+            node = node.right;
+        }
+
+        return node;
+    }
+
+
+}
