@@ -1,0 +1,75 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+public class Stack<T> : IEnumerable<T>
+{
+    private T[] _arr;
+    public int Size { get; private set; }
+    public int Capacity { get; private set; }
+
+    public Stack(int capacity)
+    {
+        _arr = new T[capacity];
+        Size = 0;
+        Capacity = capacity;
+    }
+
+    public void Push(T val)
+    {
+        if (Size == Capacity)
+        {
+            Resize(Capacity * 2);
+        }
+        _arr[Size] = val;
+        Size++;
+    }
+
+    public T Pop()
+    {
+        Size--;
+        T val = _arr[Size];
+        _arr[Size] = default(T); 
+        return val;
+    }
+
+    public T Top()
+    {
+        return _arr[Size - 1];
+    }
+
+    public bool Empty()
+    {
+        return Size == 0;
+    }
+
+    public int SizeOf()
+    {
+        return Size;
+    }
+
+    private void Resize(int newCapacity)
+    {
+        T[] newArr = new T[newCapacity];
+        for (int i = 0; i < Size; i++)
+        {
+            newArr[i] = _arr[i];
+        }
+        _arr = newArr;
+        Capacity = newCapacity;
+    }
+    
+    public IEnumerator<T> GetEnumerator()
+    {
+        for (int i = 0; i < Size; i++)
+        {
+            yield return _arr[i];
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+}
+
