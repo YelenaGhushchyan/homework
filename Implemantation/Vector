@@ -1,0 +1,105 @@
+using System.Collections;
+public class List<T> : IEnumerable<T>
+{
+    private T[] _arr;
+    public int Size { get; set; }
+    public int Capacity { get; set; }
+
+    public T this[int index]
+    {
+        get
+        {
+            if (index < 0 || index >= Capacity) throw new IndexOutOfRangeException("Index out of Range");
+            return _arr[index];
+        }
+        set
+        {
+            if (index < 0 || index >= Capacity) throw new IndexOutOfRangeException("Index out of Range");
+            _arr[index] = value;
+        }
+    }
+
+    public List(int newCapacity)
+    {
+        _arr = new T[newCapacity];
+        Size = 0;
+        Capacity = newCapacity;
+    }
+
+    public void PushBack(T val)
+    {
+        if (Size == Capacity)
+        {
+            Resize(Capacity * 2);
+        }
+
+        _arr[Size++] = val;
+    }
+
+    public void Resize(int capacity)
+    {
+        T[] newArr = new T[capacity];
+        for (int i = 0; i < Size; i++)
+        {
+            newArr[i] = _arr[i];
+        }
+
+        _arr = newArr;
+        Capacity = capacity;
+    }
+
+    public void PopBack()
+    {
+        _arr[Size] = default(T);
+        Size--;
+    }
+
+    public void Insert(int pos, T item)
+    {
+        if (pos < 0 || pos > Size) throw new IndexOutOfRangeException("out of range");
+        if(Size == Capacity) Resize(Capacity * 2);
+
+        for (int i = Size - 1; i >= pos; i--)
+        {
+            _arr[i + 1] = _arr[i];
+        }
+
+        _arr[pos] = item;
+        Size++;
+    }
+
+    public void Erase(int pos)
+    {
+        if (pos < 0 || pos >= Size) throw new IndexOutOfRangeException("out of range");
+        for (int i = pos; i < Size - 1; i++)
+        {
+            _arr[i ] = _arr[i + 1];
+        }
+        Size--;
+    }
+    public void ShrinkToFit()
+    {
+        if (Capacity > Size)
+        {
+            int newCapacity = Math.Max(1, Size);
+            T[] newArr = new T[newCapacity];
+            for (int i = 0; i < Size; i++)
+            {
+                newArr[i] = _arr[i];
+            }
+            _arr = newArr;
+            Capacity = newCapacity;
+        }
+    }
+    public IEnumerator<T> GetEnumerator()
+    {
+        for (int i = 0; i < Size; i++)
+        {
+            yield return _arr[i];
+        }
+    }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+}
