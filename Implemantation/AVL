@@ -1,0 +1,223 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace AVL;
+
+public class Node<T> where T : IComparable<T>
+{
+    public Node<T> left { get; set; }
+    public Node<T> right { get; set; }
+    public T val { get; set; }
+    
+    public Node (T Val)
+    {
+        val = Val;
+        left = null;
+        right = null;
+    }
+}
+public class AVL<T> where T : IComparable<T>
+{
+    private Node<T> root { get; set; }
+
+    public AVL()
+    {
+        root = null;
+    }
+
+    public AVL(T val)
+    {
+        root = new Node<T>(val);
+    }
+    public void InOrder()
+    {
+        InOrder(root);
+        Console.WriteLine();
+    }
+
+    private void InOrder(Node<T> node)
+    {
+        if (node == null) return;
+        InOrder(node.left);
+        Console.Write(node.val + " ");
+        InOrder(node.right);
+    }
+
+    public void PreOrder()
+    {
+        PreOrder(root);
+        Console.WriteLine();
+    }
+
+    private void PreOrder(Node<T> node)
+    {
+        if (node == null) return;
+        Console.Write(node.val + " ");
+        PreOrder(node.left);
+        PreOrder(node.right);
+    }
+
+    public void PostOrder()
+    {
+        PostOrder(root);
+        Console.WriteLine();
+    }
+
+    private void PostOrder(Node<T> node)
+    {
+        if (node == null) return;
+        PostOrder(node.left);
+        PostOrder(node.right);
+        Console.Write(node.val + " ");
+    }
+
+
+    private Node<T> RightRotate(Node<T> z)
+    {
+        Node<T> y = z.left;
+        Node<T> T2 = y.left;
+        y.right = z;
+        z.left = T2;
+
+        return y;
+    }
+
+    public void TestRightRotate()
+    {
+        root = RightRotate(root);
+    }
+
+    private Node<T> LeftRotate(Node<T> z)
+    {
+        Node<T> y = z.right;
+        Node<T> T2 = y.left;
+        y.left = z;
+        z.right = T2;
+
+        return y;
+    }
+
+    public void TestLeftRotate()
+    {
+        root = LeftRotate(root);
+    }
+
+    private int GetBalanceFactor(Node<T> node)
+    {
+        return GetHeight(node.left) - GetHeight(node.right);
+    }
+
+    private int GetHeight(Node<T> node)
+    {
+        if (node == null) return 0;
+
+        int left = GetHeight(node.left);
+        int right = GetHeight(node.right);
+
+        return Math.Max(left, right) + 1;
+    }
+
+    private Node<T> InsertHelper(Node<T> node, T val)
+    {
+        if (node == null) return new Node<T>(val);
+        if (node.val.CompareTo(val) > 0)
+        {
+            node.left = InsertHelper(node.left, val);
+        }
+        else
+        {
+            node.right = InsertHelper(node.right, val);
+        }
+
+        int bf = GetBalanceFactor(node);
+
+        if (bf > 1 && node.left.val.CompareTo(val) > 0)
+        {
+            return RightRotate(node);
+        }
+
+        if (bf > 1 && node.left.val.CompareTo(val) < 0)
+        {
+            node.left = LeftRotate(node.left);
+            return RightRotate(node);
+        }
+
+        if (bf < -1 && node.right.val.CompareTo(val) < 0)
+        {
+            return LeftRotate(node);
+        }
+
+        if (bf < -1 && node.right.val.CompareTo(val) > 0)
+        {
+            node.right = RightRotate(node.right);
+            return LeftRotate(node);
+        }
+
+        return node;
+    }
+    public void Insert(T val)
+    {
+        root = InsertHelper(root, val);
+    }
+    private Node<T> Delete(Node<T> node, T val)
+    {
+        if (node == null) return node;
+        if (node.val.CompareTo(val) > 0)
+        {
+            node.left = Delete(node.left,val);
+        }
+        else if (node.val.CompareTo(val) < 0)
+        {
+            node.right = Delete(node.right, val);
+        }
+        else
+        {
+            if (node.left == null) return node.right;
+            if (node.right == null) return node.left;
+            Node<T> tmp = FindMin(node.right);
+            node.val = tmp.val;
+            node.right = Delete(node.right, tmp.val);
+        }
+
+        int bf = GetBalanceFactor(node);
+        if (bf > 1 && GetBalanceFactor(node.left) >= 0)
+        {
+            return RightRotate(node);
+        }
+
+        if (bf > 1 && GetBalanceFactor((node.left)) < 0)
+        {
+            node.left = LeftRotate(node.left);
+            return RightRotate(node);
+        }
+        if (bf < -1 && GetBalanceFactor(node.right) <= 0)
+            return LeftRotate(node);
+
+        
+        if (bf < -1 && GetBalanceFactor(node.right) > 0)
+        {
+            node.right = RightRotate(node.right);
+            return LeftRotate(node);
+        }
+
+        return node;
+    }
+
+    public void Delete(T val)
+    {
+        root = Delete(root,val);
+    }
+
+    private Node<T> FindMin(Node<T> node)
+    {
+        if (node == null) return node;
+
+        while (node.left != null)
+        {
+            node = node.left;
+        }
+
+        return node;
+    }
+
+
+}
